@@ -15,6 +15,18 @@
         *tamanho = i;
     }
 
+    void transforma_octal(int n,int resultado[], int *tamanho) {
+
+        int i = 0;
+
+        while (n > 0) {
+            resultado[i] = n % 8;
+            n = n / 8;
+            i++;
+        }
+        *tamanho = i;
+    }
+
     void transforma_hexa(int n,char resultadohexa[], int *tamanho) {
 
         int i = 0;
@@ -34,6 +46,7 @@
 
         *tamanho = i;
     }
+
 int main(void) {
 
     int opcao,numero;
@@ -65,6 +78,16 @@ int main(void) {
         case 2:
             printf("Digite um numero na Base 10: ");
             scanf("%d",&numero);
+
+            transforma_octal(numero, resultado, &tamanho);
+
+            printf("Resultado em octal: ");
+
+            for (int i = tamanho - 1; i >= 0; i--) {
+                printf("%d", resultado[i]);
+            }
+
+            break;
 
         case 3:
             printf("Digite um numero na Base 10: ");
