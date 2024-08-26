@@ -3,7 +3,7 @@
 //transformar base 10 para binario: 12:00 23/08/2024
 //transformar base 10 para hexadecimal: 15:30 23/08/2024
 //transformar base 10 para octal: 15:45 23/08/2024
-
+//transformar em complemento de 2: 15:33 26/08/2024
 
 #include <stdio.h>
 #include <string.h>
@@ -78,6 +78,49 @@
         *tamanho = i;
     }
 
+    void transforma_complemento2(int n,int resultado[], int *tamanho) {
+
+        int negativo = (n < 0);
+
+        if (negativo) {
+            n = -n;
+        }
+
+        int i = 0;
+        while (n > 0) {
+            resultado[i] = n % 2;
+            n = n / 2;
+            i++;
+        }
+
+        *tamanho = i;
+
+        if (negativo) {
+
+            for (int j = 0; j < *tamanho; j++) {
+                resultado[j] = (resultado[j] == 1) ? 0 : 1;
+            }
+
+            int carry = 1;
+            for (int j = 0; j < *tamanho; j++) {
+                int soma = resultado[j] + carry;
+                resultado[j] = soma % 2;
+                carry = soma / 2;
+            }
+
+            if (carry == 1) {
+                resultado[*tamanho] = 1;
+                (*tamanho)++;
+            }
+
+            resultado[*tamanho] = 1;
+        } else {
+            resultado[*tamanho] = 0;
+        }
+
+        (*tamanho)++;
+    }
+
 int main(void) {
 
     int opcao,numero,resultado[32],tamanho=0;
@@ -87,7 +130,7 @@ int main(void) {
         printf("Escolha qual operacao deseja fazer: \n\nBase 10 para Binario: 1\n\nBase 10 para Octal: 2\n\nBase 10 para Hexadecimal: 3\n\nBase 10 para codigo BCD: 4\n\nBase 10 para base com sinal com 16 bits: 5\n\nreal em decimal para float e double: 6");
         scanf("%d",&opcao);
 
-    }while (opcao>4 && opcao<1);
+    }while (opcao>6 || opcao<1);
 
     switch (opcao) {
         case 1:
@@ -153,9 +196,21 @@ int main(void) {
             printf("Digite um numero na Base 10: ");
             scanf("%d",&numero);
 
+            transforma_complemento2(numero,resultado, &tamanho);
+
+            printf("Resultado em complemento de 2: ");
+
+            for (int i = tamanho - 1; i >= 0; i--) {
+                printf("%d", resultado[i]);
+            }
+
+            break;
+
         case 6:
             printf("Digite um numero real em decimal: ");
             scanf("%d",&numero);
+
+            break;
     }
 
     return 0;
