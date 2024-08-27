@@ -4,11 +4,13 @@
 //transformar base 10 para hexadecimal: 15:30 23/08/2024
 //transformar base 10 para octal: 15:45 23/08/2024
 //transformar em complemento de 2: 15:33 26/08/2024
+//Questão 03: 9:46 27/08/2024
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdint.h>
 
     void transforma_binario(int n,int resultado[], int *tamanho) {
 
@@ -121,6 +123,57 @@
         (*tamanho)++;
     }
 
+    void print_bits(uint64_t n, int bits) {
+            for (int i = bits - 1; i >= 0; i--) {
+                printf("%d", (n >> i) & 1);
+                if (i % 4 == 0 && i != 0) printf(" ");
+            }
+            printf("\n");
+    }
+
+    void converte_float(float f) {
+            union {
+                float f;
+                uint32_t u;
+            } converter;
+
+            converter.f = f;
+            uint32_t bits = converter.u;
+
+            uint32_t sinal = (bits >> 31) & 1;
+            uint32_t expoente = (bits >> 23) & 0xFF;
+            uint32_t mantissa = bits & 0x7FFFFF;
+
+            printf("Float:\n");
+            printf("Sinal: %u\n", sinal);
+            printf("Expoente (com viés): ");
+            print_bits(expoente, 8);
+            printf("Mantissa: ");
+            print_bits(mantissa, 23);
+        }
+
+
+    void converte_double(double d) {
+            union {
+                double d;
+                uint64_t u;
+            } converter;
+
+            converter.d = d;
+            uint64_t bits = converter.u;
+
+            uint64_t sinal = (bits >> 63) & 1;
+            uint64_t expoente = (bits >> 52) & 0x7FF;
+            uint64_t mantissa = bits & 0xFFFFFFFFFFFFF;
+
+            printf("\nDouble:\n");
+            printf("Sinal: %llu\n", sinal);
+            printf("Expoente (com vies): ");
+            print_bits(expoente, 11);
+            printf("Mantissa: ");
+            print_bits(mantissa, 52);
+        }
+
 int main(void) {
 
     int opcao,numero,resultado[32],tamanho=0;
@@ -207,8 +260,16 @@ int main(void) {
             break;
 
         case 6:
+            float num_float;
+            double num_double;
+
             printf("Digite um numero real em decimal: ");
-            scanf("%d",&numero);
+            scanf("%f",&num_float);
+
+            num_double = (double) num_float;
+
+            converte_float(num_float);
+            converte_double(num_double);
 
             break;
     }
